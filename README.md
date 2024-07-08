@@ -1,6 +1,7 @@
 # YouTube sharing web application introduction
 This is my assessment to implement a YouTube video sharing web application.
 ## 1. Project introduction:
+- Backend database migration repo: https://github.com/ledaihoan/renect-youtube-sharing-database-migration
 - Backend repo: https://github.com/ledaihoan/renec-youtube-sharing-backend
 - Frontend (React) repo: https://github.com/ledaihoan/renect-youtube-sharing-ui
 ### 1.1 Initial constraints & assumptions
