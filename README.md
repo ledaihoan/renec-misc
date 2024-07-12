@@ -82,3 +82,81 @@ $ newgrp docker
 # Test docker run with out sudo
 $ docker run hello-world
 ```
+## 4. Database setup
+- Clone repo at: https://github.com/ledaihoan/renect-youtube-sharing-database-migration
+- Run yarn install
+```shell
+$ cd /path/to/renect-youtube-sharing-database-migration
+$ yarn
+```
+- Run the command to init database
+```shell
+$ cd /path/to/renect-youtube-sharing-database-migration
+# delete is optional param to remove existing instance in local machine
+$ ./start_db.sh [delete]
+```
+- Run the command to make migration file: the script will create a timestamp for you. When make PR to git, please keep in mind that you should have the latest timestamp in compare to current git main branch state to make the migration work correctly
+```shell
+$ yarn migrate:make migration_script_name
+```
+- Migration run script: Change the env name with corresponding env.${DEPLOYMENT_ENV}.yaml
+```shell
+# For local, providing this variable is optional
+export DEPLOYMENT_ENV=local
+$ ./run_migration_with_env.sh $DEPLOYMENT_ENV
+```
+## 5. Running the application
+- Start database migration as mentioned in Step4 first. Check connection with a SQL client like DBeaver or PgAdmin4, default connection string is postgresql://postgres:Renec2024@localhost:5432/postgres
+- Start backend local: the URL will be http://localhost:8000 or http://renec-yt-sharing-backend:8000
+```shell
+$ cd /path/to/renec-youtube-sharing-backend
+# To start service on local machine
+$ ./run_service_with_docker.sh
+# To stop service on local machine
+$ ./stop_docker.sh
+```
+- Start ui local: the URL will be http://localhost:3000 or http://renect-yt-sharing-ui:3000
+```shell
+$ cd /path/to/renec-youtube-sharing-frontend
+$ ./run_service_with_docker.sh
+```
+- Live version is at https://yt-sharing-app.technoma.tech (UI), https://yt-sharing-backend.technoma.tech (Backend)
+## 6. Docker & deployment
+- In assessment scope, I just provide local run as mentioned in Section 5.
+- Linux base deployment script also provided in same folder (./run_service.sh $DEPLOYMENT_ENV)
+- Please check carefully on prerequisites and environment install guide  in section 2 and 3 before process.
+## 7. Usage
+- Main screen: https://yt-sharing-app.technoma.tech
+- Login Feature: Input your email (unique) with password, click Register for first time that you don't have registered account yet and Login to use existing account
+- Share video button: available when you logged in
+- Reaction buttons: available when you logged in
+- Create video share post modal: just paste in a YouTube URL and the title & description should be parsed from the link automatically
+## 8. Trouble shooting and common issues:
+- NodeJS env permission: don't use root to process installation, use NVM for better env setup experience
+- Docker: Check permission and post installation setup as mentioned in official link
+- The installation and the running process should be done successfully as my guide and sample installation scripts are well-written to support compatibility for most popular OS
+
+## MISC, improvements
+As I have tight schedules while taking this assessment, I will try to update soon :)
+- Unit test: Backend already setup, just add more unit test and change Jest code coverage setting threshold to enforce quality. I don't have unit test for frontend yet as I'm not so familiar with Story Book
+- Web socket subscribe & notification: Yes, this also take about 1 more day
+- Test plan:
+  - API list
+    - public: Register, Login, Search video posts
+    - authenticated: Create Video posts, Up vote / down vote, search current users' reaction
+  - API test:
+    - payload validation
+    - content behavior correctness
+      - Register: should create account and check email unique
+      - Password: should be 8 characters length minimum with at least 1 uppercase, 1 number and 1 special character
+      - Login: should log in if given user and password is valid matched
+      - Create video posts / reaction: should authenticate users and prevent unauthorized access (not logged in or wrong user resource ownership)
+  - UI test:
+    - test UI appearance specs
+    - test UI content display correctness
+    - test UI functional work properly as defined scenarios
+    - test UI independently: with Mocked setup data / server
+  - Non-functional test: 
+    - test performance
+    - test UI/UX metric
+    - apply evaluation tools: Light House, .....
