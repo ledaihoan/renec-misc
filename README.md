@@ -141,6 +141,7 @@ $ ./run_service_with_docker.sh
 As I have tight schedules while taking this assessment, I will try to update soon :)
 - Unit test: Backend already setup, just add more unit test and change Jest code coverage setting threshold to enforce quality. I don't have unit test for frontend yet as I'm not so familiar with Story Book
 - Web socket subscribe & notification: Yes, this also take about 1 more day
+- Infinite scroll with search pagination: Backend and scroll UI already done but pagination search not integrate yet. Need to update React-Query to infinite query
 - Test plan:
   - API list
     - public: Register, Login, Search video posts
